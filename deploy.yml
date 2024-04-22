@@ -1,0 +1,18 @@
+- name: Deploy Laravel on Ubuntu
+  hosts: slave
+  become: true
+
+  tasks:
+  - name: Copy the bash script
+    copy:
+      content: "{{ lookup('file', '/home/ubuntu/exam-solution/deploy-script.sh') }}"
+      dest: /tmp/deploy_script.sh
+      mode: 'u+x'
+
+  - name: Execute the bash script
+    shell: /tmp/deploy_script.sh
+
+  - name: Verify PHP application
+    uri:
+      url: http://{{ ansible_eth0.ipv4.address }}
+      status_code: 200
